@@ -1,17 +1,11 @@
 import { useState } from "react";
 import Lobby from "./Lobby";
-import { Socket } from 'socket.io-client';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useParams,
-  useRouteMatch,
-} from "react-router-dom";
+import { Socket } from "socket.io-client";
+import { Switch, Route, useRouteMatch } from "react-router-dom";
 import NicknamePrompt from "./NicknamePrompt";
 
 interface PropsType {
-  socket: Socket
+  socket: Socket;
 }
 export default function Lobbies(props: PropsType) {
   let match = useRouteMatch();
@@ -20,11 +14,11 @@ export default function Lobbies(props: PropsType) {
   return (
     <Switch>
       <Route path={`${match.path}/:lobbyId`}>
-        <NicknamePrompt submitNicknameHandler={setNickname}/>
-        {nickname.length != 0 &&
-          <Lobby nickname={nickname} socket={props.socket} /> 
-        }
-        
+        {nickname.length !== 0 ? (
+          <Lobby nickname={nickname} socket={props.socket} />
+        ) : (
+          <NicknamePrompt submitNicknameHandler={setNickname} />
+        )}
       </Route>
       <Route path={match.path}>
         <p> Please add a lobby id</p>

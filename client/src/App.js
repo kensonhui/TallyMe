@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import openSocket from 'socket.io-client';
 import Home from './components/Home';
 import Lobbies from './components/Lobbies';

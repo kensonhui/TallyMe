@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { lobbyQuestionSend } from "../utils/api";
 import { Socket } from "socket.io-client";
 import OpenAnswer from "./answers/OpenAnswer";
 import { OpenQuestion } from "./questions/OpenQuestion";
-import NicknamePrompt from "./NicknamePrompt";
-import HostControls from "./HostControls";
 interface LobbyProps {
   socket: Socket;
   nickname: string;
@@ -71,7 +68,7 @@ export default function Lobby(props: LobbyProps) {
       socket.emit("user-leave");
       socket.offAny();
     };
-  }, []);
+  }, [lobbyId, props.nickname, socket]);
   return (
     <div>
       <div>

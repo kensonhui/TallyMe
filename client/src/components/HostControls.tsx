@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { OpenQuestion } from './questions/OpenQuestion'
 import {Socket} from 'socket.io-client'
-import React from 'react'
-import { setSyntheticTrailingComments } from 'typescript';
 interface PropsType {
     socket: Socket;
     setSettings: any;

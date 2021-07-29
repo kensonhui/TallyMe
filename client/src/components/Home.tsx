@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { sendMessage, lobbyCreateRequest } from '../utils/api';
+import { lobbyCreateRequest } from '../utils/api';
 import { Socket } from "socket.io-client";
 
 interface PropsType {
@@ -16,7 +16,7 @@ export default function Home(props: PropsType) {
       <div>
           <p>Create a Lobby or Join One</p>
           <input onChange={(e) => {setLobbyId(e.target.value)}}
-          type="text" />
+          type="text" className="shadow-md border-2"/>
           <button onClick={enterLobby}>Go to Lobby</button>
           <button onClick={() => {
             lobbyCreateRequest(props.socket, history);
