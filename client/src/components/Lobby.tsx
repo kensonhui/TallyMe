@@ -5,9 +5,10 @@ import { Socket } from "socket.io-client";
 import OpenAnswer from "./answers/OpenAnswer";
 import { OpenQuestion } from "./questions/OpenQuestion";
 import NicknamePrompt from "./NicknamePrompt";
+import HostControls from "./HostControls";
 interface LobbyProps {
-  socket: Socket
-  nickname: string
+  socket: Socket;
+  nickname: string;
 }
 interface ParamTypes {
   lobbyId: string;
@@ -19,6 +20,7 @@ interface ResponseType {
 }
 interface LobbyDataType {
   members: [string];
+  givenHost: boolean;
 }
 
 export default function Lobby(props: LobbyProps) {
@@ -27,9 +29,12 @@ export default function Lobby(props: LobbyProps) {
   const [members, setMembers] = useState<Array<string>>([]);
   const [answerPrompt, setAnswerPrompt] = useState({
     question: "",
+    details: "",
+    anonymous: false,
   });
-  const [nickname, setNickname] = useState("");
+  const [numberResponses, setNumberResponses] = useState(0);
   const [responses, setResponses] = useState<Array<ResponseType>>([]);
+  const [isHost, setIsHost] = useState(false);
   const lobbyAnswerEnd = () => {
     socket.emit("lobbyAnswerEnd");
   };
@@ -43,18 +48,23 @@ export default function Lobby(props: LobbyProps) {
       props.nickname,
       (response: LobbyDataType) => {
         console.log(response.members);
+        if (response.givenHost) {
+          setIsHost(true);
+        }
         setMembers(response.members);
       }
     );
     socket.on("lobbyQuestionPose", (questionData) => {
-      console.log("Question asked", questionData);
+      setNumberResponses(0);
       setAnswerPrompt(questionData);
+    });
+    socket.on("answer-count", (count) => {
+      setNumberResponses(count);
     });
     socket.on("lobby-update", (data) => {
       setMembers(data.members);
     });
     socket.on("lobbyAnswerEnd", (responses) => {
-      console.log(responses);
       setResponses(responses);
     });
     return () => {
@@ -70,13 +80,16 @@ export default function Lobby(props: LobbyProps) {
         ))}
       </div>
       Requested lobbyid: {lobbyId}
-      <OpenQuestion socket={socket} />
+      {isHost && <OpenQuestion socket={socket} />}
+      <button onClick={lobbyAnswerEnd}>End responses</button>
       {answerPrompt.question.length !== 0 ? (
-        <OpenAnswer socket={socket} answerPrompt={answerPrompt} />
+        <div>
+          <OpenAnswer socket={socket} answerPrompt={answerPrompt} />
+          Number of responses:{numberResponses}
+        </div>
       ) : (
         <p>Waiting for host to send question</p>
       )}
-      <button onClick={lobbyAnswerEnd}>End responses</button>
       <div>
         {responses.map((response) => (
           <div key={response.nickname + response.answer}>

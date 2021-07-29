@@ -13,12 +13,10 @@ const lobbyQuestionSend = (socket, data) => {
   socket.emit("lobbyQuestionSend", data);
 };
 
-const lobbyAnswerSend = (socket, data) => {
-  socket.emit("lobbyAnswerSend", data);
+const lobbyAnswerSend = (socket, data, responseHandler) => {
+  socket.emit("lobbyAnswerSend", data, (response) => {
+    console.log(response);
+    responseHandler(response);
+  });
 };
-export { 
-  sendMessage, 
-  lobbyCreateRequest, 
-  lobbyQuestionSend, 
-  lobbyAnswerSend 
-};
+export { sendMessage, lobbyCreateRequest, lobbyQuestionSend, lobbyAnswerSend };

@@ -18,32 +18,33 @@ let roomQuestions = new Map();
 
 const getSocket = (socketId) => {
   return io.sockets.sockets.get(socketId);
-}
+};
 
 const getSocketRoom = (socket) => {
   return socket.rooms.values().next().value;
-}
+};
 
 const getRoomSocketsIds = (room) => {
   return io.of("/").adapter.rooms.get(room);
-}
+};
 
 const lobbyUpdate = (room, lobbyData) => {
   io.to(room).emit("lobby-update", lobbyData);
-}
+};
 
 io.on("connection", (socket) => {
-  console.log("A user has connected" + socket.id);
   socket.leave(socket.id);
-  socket.on("hello", () => {
-    console.log("client has said hellp");
-  });
   socket.on("lobbyCreateRequest", (callback) => {
-    let lobbyId = Math.random().toString(36).substr(2, 5);
-    socket.join(lobbyId);
+    let room = Math.random().toString(36).substr(2, 5);
+    socket.join(room);
+    roomData.set(room, {
+      host: socket.id,
+      question: "",
+      details: "",
+    });
     callback({
       status: "ok",
-      lobby: lobbyId,
+      lobby: room,
       members: [],
     });
   });
@@ -59,62 +60,80 @@ io.on("connection", (socket) => {
       nicknames.push(getSocket(clientId).data.nickname);
     });
     lobbyUpdate(lobbyId, {
-      members: nicknames
+      members: nicknames,
     });
     callback({
       members: nicknames,
+      givenHost: socket.id === roomData.get(lobbyId).host,
     });
   });
   socket.on("lobbyQuestionSend", (questionData) => {
     // Get current room user is in
-    console.log(socket.rooms);
     const room = getSocketRoom(socket);
     roomQuestions.set(room, {
       ...questionData,
-      answers: []
-    })
+      answers: [],
+      clients_answered: [],
+    });
     io.to(room).emit("lobbyQuestionPose", questionData);
   });
-  socket.on("lobbyAnswerSend", (answerData) => {
+  socket.on("lobbyAnswerSend", (answerData, callback) => {
     const room = getSocketRoom(socket);
     const answer = {
       answer: answerData.answer,
-      nickname: socket.data.nickname
+      nickname: roomQuestions.get(room).anonymous
+        ? "Anonymous"
+        : socket.data.nickname,
+    };
+    if (!roomQuestions.get(room).clients_answered.includes(socket.id)) {
+      const roomData = roomQuestions.get(room);
+      const { answers, clients_answered } = roomData;
+      roomQuestions.set({
+        ...roomData,
+        answers: answers.push(answer),
+        clients_answered: clients_answered.push(socket.id),
+      });
     }
-    roomQuestions.set(roomQuestions.get(room).answers.push(answer));
+    io.to(room).emit("answer-count", roomQuestions.get(room).answers.length);
+    callback({
+      status: "ok",
+    });
   });
   socket.on("lobbyAnswerEnd", () => {
     const room = getSocketRoom(socket);
-    io.to(room).emit("lobbyAnswerEnd", roomQuestions.get(room).answers)
+    io.to(room).emit("lobbyAnswerEnd", roomQuestions.get(room).answers);
   });
   socket.on("user-leave", () => {
     const room = getSocketRoom(socket);
     const nicknames = [];
     const clients = getRoomSocketsIds(room);
-    console.log(room);
-    console.log(clients);
     if (clients) {
-    clients.forEach((client) => 
-      {
-        client !== socket.id && nicknames.push(getSocket(client).data.nickname)});
-    lobbyUpdate(room, {
-      members: nicknames
-    });
-  }
+      clients.forEach((client) => {
+        client !== socket.id && nicknames.push(getSocket(client).data.nickname);
+      });
+      lobbyUpdate(room, {
+        members: nicknames,
+      });
+    }
   });
   socket.on("disconnecting", () => {
     const room = getSocketRoom(socket);
     const nicknames = [];
     const clients = getRoomSocketsIds(room);
     if (clients) {
-    clients.forEach((client) => 
-      {
-        socket.id !== client && nicknames.push(getSocket(client).data.nickname)});
-    lobbyUpdate(room, {
-      members: nicknames
-    });
-  }
-  
+      clients.forEach((client) => {
+        socket.id !== client && nicknames.push(getSocket(client).data.nickname);
+      });
+      // clear data when all users leave
+      if (clients.size === 1) {
+        roomData.delete(room);
+        roomQuestions.delete(room);
+      } else {
+        lobbyUpdate(room, {
+          members: nicknames,
+        });
+      }
+    }
   });
 });
 

@@ -19,9 +19,6 @@ export default function Home(props: PropsType) {
           type="text" />
           <button onClick={enterLobby}>Go to Lobby</button>
           <button onClick={() => {
-            sendMessage(props.socket)}
-            }>Button</button>
-          <button onClick={async () => {
             lobbyCreateRequest(props.socket, history);
           }}>
             Host Lobby
