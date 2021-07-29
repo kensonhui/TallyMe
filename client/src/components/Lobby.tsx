@@ -70,27 +70,34 @@ export default function Lobby(props: LobbyProps) {
     };
   }, [lobbyId, props.nickname, socket]);
   return (
-    <div>
+    <div className="grid place-items-center">
       <div>
         {members.map((member) => (
-          <p key={member}>{member}</p>
+          <p key={member}
+          className="bg-green-600">{member}</p>
         ))}
       </div>
       Requested lobbyid: {lobbyId}
-      {isHost && <OpenQuestion socket={socket} />}
+      {isHost && 
+      <div>
+      <OpenQuestion socket={socket} />
       <button onClick={lobbyAnswerEnd}>End responses</button>
+      </div>}
       {answerPrompt.question.length !== 0 ? (
         <div>
           <OpenAnswer socket={socket} answerPrompt={answerPrompt} />
-          Number of responses:{numberResponses}
+          Number of responses: <span className="bg-green-900 rounded-full w-3 h-3">{numberResponses}</span>
         </div>
       ) : (
         <p>Waiting for host to send question</p>
       )}
-      <div>
+      <div className="w-full">
+        {responses.length !== 0 && 
+        <h3 className="text-3xl text-left">Responses:</h3>}
         {responses.map((response) => (
-          <div key={response.nickname + response.answer}>
-            <h3>{response.nickname}</h3>
+          <div key={response.nickname + response.answer}
+            className="bg-green-500 border-2 border-black m-2">
+            <h3 className="text-3xl">{response.nickname}</h3>
             <p>{response.answer}</p>
           </div>
         ))}

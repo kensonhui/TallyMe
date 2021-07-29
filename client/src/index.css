@@ -4,7 +4,10 @@
 
 @layer base {
   input[type="text"] {
-    @apply border-2;
+    @apply border-2 text-black;
+  }
+  button {
+    @apply border-white border rounded-md p-1;
   }
 }
 body {

@@ -11,18 +11,22 @@ import {
 const socket = openSocket('/');
 function App() {
   return (
-      <Router>
-        <Link to="/">Home</Link>
-        <Link to="/lobby">Lobby</Link>
-        <Switch>
-          <Route path="/lobby">
-            <Lobbies socket={socket}/>
-          </Route>
-          <Route path="/">
-            <Home socket={socket}/>
-          </Route>
-        </Switch>
-    </Router>
+      <div className="bg-gray-600 min-h-screen text-gray-50">
+        <Router>
+          <div className="bg-gray-700 flex">
+            <Link to="/" className="m-2">Home</Link>
+            <Link to="/lobby" className="m-2">Lobby</Link>
+          </div>
+          <Switch>
+            <Route path="/lobby">
+              <Lobbies socket={socket}/>
+            </Route>
+            <Route path="/">
+              <Home socket={socket}/>
+            </Route>
+          </Switch>
+            </Router>
+      </div>
   );
 }
 
