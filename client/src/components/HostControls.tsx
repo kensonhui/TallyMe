@@ -17,8 +17,6 @@ export default function HostControls(props: PropsType) {
     }, [anonymous])
    return( 
     <div>
-        <OpenQuestion socket={props.socket} />
-        <input type="checkbox" onChange={(e) => {setAnonymous((past) => !past)}} />
     </div>
    )  
      

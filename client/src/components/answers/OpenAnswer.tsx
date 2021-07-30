@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { lobbyAnswerSend } from "../../utils/api";
 import { Socket } from "socket.io-client";
 interface PropsType {
-  answerPrompt: { question: string; details: string; anonymous: boolean };
+  answerPrompt: { 
+    question: string; 
+    details: string; 
+    anonymous: boolean;
+    targets: string[]
+  };
   socket: Socket;
 }
 export default function OpenAnswer(props: PropsType) {
@@ -17,7 +22,6 @@ export default function OpenAnswer(props: PropsType) {
         answer: answer,
       };
       lobbyAnswerSend(props.socket, answerData, (response: any) => {
-        console.log(response);
         if (response.status === "ok") {
           setSubmitted(true);
         }
@@ -36,6 +40,9 @@ export default function OpenAnswer(props: PropsType) {
           {props.answerPrompt.anonymous ? "anonymous" : "not anonymous"}
         </span>
       </p>
+      <div>
+        Your answer will be shown to: {props.answerPrompt.targets.map((target) => <p key={target}>{target}</p>)}
+      </div>
       <p>Answer</p>
       <textarea
         onChange={(e) => setAnswer(e.target.value)}

@@ -99,9 +99,13 @@ io.on("connection", (socket) => {
       status: "ok",
     });
   });
-  socket.on("lobbyAnswerEnd", () => {
+  socket.on("lobbyAnswerEnd", async () => {
     const room = getSocketRoom(socket);
-    io.to(room).emit("lobbyAnswerEnd", roomQuestions.get(room).answers);
+    const sockets = await io.in(room).fetchSockets();
+    const { targets, answers } = roomQuestions.get(room);
+    sockets.map((client) => {
+      client.emit("lobbyAnswerEnd", targets.includes(client.data.nickname)? answers: []);
+    })
   });
   socket.on("user-leave", () => {
     const room = getSocketRoom(socket);

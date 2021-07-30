@@ -15,7 +15,6 @@ const lobbyQuestionSend = (socket, data) => {
 
 const lobbyAnswerSend = (socket, data, responseHandler) => {
   socket.emit("lobbyAnswerSend", data, (response) => {
-    console.log(response);
     responseHandler(response);
   });
 };

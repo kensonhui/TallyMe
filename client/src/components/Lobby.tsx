@@ -28,6 +28,7 @@ export default function Lobby(props: LobbyProps) {
     question: "",
     details: "",
     anonymous: false,
+    targets: []
   });
   const [numberResponses, setNumberResponses] = useState(0);
   const [responses, setResponses] = useState<Array<ResponseType>>([]);
@@ -44,7 +45,6 @@ export default function Lobby(props: LobbyProps) {
       lobbyId,
       props.nickname,
       (response: LobbyDataType) => {
-        console.log(response.members);
         if (response.givenHost) {
           setIsHost(true);
         }
@@ -80,7 +80,7 @@ export default function Lobby(props: LobbyProps) {
       Requested lobbyid: {lobbyId}
       {isHost && 
       <div>
-      <OpenQuestion socket={socket} />
+      <OpenQuestion socket={socket} members={members}/>
       <button onClick={lobbyAnswerEnd}>End responses</button>
       </div>}
       {answerPrompt.question.length !== 0 ? (

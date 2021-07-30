@@ -1,19 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { lobbyQuestionSend } from "../../utils/api";
 import { Socket } from "socket.io-client";
+import { CheckBox } from "../CheckBox";
 interface Question {
   socket: Socket;
+  members: string[];
 }
 
 const OpenQuestion = (props: Question) => {
+  useEffect(() => {
+    setTargets((past) =>
+      props.members.map((member, index) =>
+        index < targets.length ? past[index] : false
+      )
+    );
+  }, [props.members]);
   const [question, setQuestion] = useState("");
   const [details, setDetails] = useState("");
   const [anonymous, setAnonymous] = useState(false);
+  const [targets, setTargets] = useState<Array<boolean>>(
+    new Array(props.members.length).fill(true)
+  );
+  const [targetAll, setTargetAll] = useState(true);
+  const targetChangeHandler = (position: number) => {
+    const setChecked = (checked: boolean[]) =>
+      checked.map((item, index) => (index === position ? !item : item));
+    setTargetAll(false);
+    setTargets(setChecked);
+  };
+  const targetChangeAll = (all: boolean) => {
+    console.log(all);
+    setTargets((past: boolean[]) => past.map((item) => all));
+    setTargetAll((past) => !past);
+  };
   const questionSendHandler = () => {
     const questionData = {
       question: question,
       details: details,
       anonymous: anonymous,
+      targets: props.members.filter((member, index) => targets[index]),
     };
     lobbyQuestionSend(props.socket, questionData);
   };
@@ -30,6 +55,30 @@ const OpenQuestion = (props: Question) => {
         onChange={(e) => setDetails(e.target.value)}
         className="w-full text-black"
       ></textarea>
+      <div>
+        <div className="flex items-center">
+          <p>Show to:</p>
+          <span className="ml-1">
+            {targets.map((target, index) =>
+                (target && 
+                `${props.members[index]}, `)
+            )}
+          </span>
+        </div>
+        {props.members.map((member, index) => (
+          <CheckBox
+            key={member}
+            item={member}
+            checked={targets[index]}
+            changeCheck={() => targetChangeHandler(index)}
+          ></CheckBox>
+        ))}
+        <CheckBox
+          item="all"
+          checked={targetAll}
+          changeCheck={(e) => targetChangeAll(e.target.checked)}
+        ></CheckBox>
+      </div>
       <div className="flex justify-center">
         <p> Anonymous Vote:</p>
         <input
