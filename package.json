@@ -8,7 +8,7 @@
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "tsc-dev":"concurrently \"tsc --watch\" \"npm run client\"",
+    "tsc-dev":"concurrently \"npx tsc server.ts -w\" \"npm run client\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "kensonhui",
