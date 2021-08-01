@@ -62,6 +62,7 @@ export default function Lobby(props: LobbyProps) {
       setMembers(data.members);
     });
     socket.on("lobbyAnswerEnd", (responses) => {
+      console.log(responses);
       setResponses(responses);
     });
     return () => {

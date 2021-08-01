@@ -22,7 +22,7 @@ export default function OpenAnswer(props: PropsType) {
         answer: answer,
       };
       lobbyAnswerSend(props.socket, answerData, (response: any) => {
-        if (response.status === "ok") {
+        if (response.status === 200) {
           setSubmitted(true);
         }
       });

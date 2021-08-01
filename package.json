@@ -7,7 +7,8 @@
     "start": "node server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"nodemon server.js\" \"npm run client\"",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "tsc-dev":"concurrently \"tsc --watch\" \"npm run client\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "kensonhui",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "concurrently": "^6.2.0",
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.12",
+    "typescript": "^4.3.5"
   }
 }

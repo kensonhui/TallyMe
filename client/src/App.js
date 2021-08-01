@@ -1,6 +1,8 @@
 import openSocket from 'socket.io-client';
 import Home from './components/Home';
 import Lobbies from './components/Lobbies';
+import Feedback from './components/Feedback';
+import About from './components/About'
 import {
   BrowserRouter as Router,
   Switch,
@@ -16,10 +18,18 @@ function App() {
           <div className="bg-gray-700 flex">
             <Link to="/" className="m-2">Home</Link>
             <Link to="/lobby" className="m-2">Lobby</Link>
+            <Link to="/about" className="m-2">About</Link>
+            <Link to="/feedback" className="m-2">Feedback</Link>
           </div>
           <Switch>
             <Route path="/lobby">
               <Lobbies socket={socket}/>
+            </Route>
+            <Route path="/about">
+              <About />
+            </Route>
+            <Route path="/feedback">
+              <Feedback />
             </Route>
             <Route path="/">
               <Home socket={socket}/>

@@ -43,7 +43,7 @@ io.on("connection", (socket) => {
       details: "",
     });
     callback({
-      status: "ok",
+      status: 200,
       lobby: room,
       members: [],
     });
@@ -54,18 +54,27 @@ io.on("connection", (socket) => {
     });
     socket.join(lobbyId);
     socket.data.nickname = nickname;
-    const clients = getRoomSocketsIds(lobbyId);
-    const nicknames = [];
-    clients.forEach((clientId) => {
-      nicknames.push(getSocket(clientId).data.nickname);
-    });
-    lobbyUpdate(lobbyId, {
-      members: nicknames,
-    });
-    callback({
-      members: nicknames,
-      givenHost: socket.id === roomData.get(lobbyId).host,
-    });
+    if (roomData.has(lobbyId)) {
+      const clients = getRoomSocketsIds(lobbyId);
+      const nicknames = [];
+      clients.forEach((clientId) => {
+        nicknames.push(getSocket(clientId).data.nickname);
+      });
+      lobbyUpdate(lobbyId, {
+        members: nicknames,
+      });
+      callback({
+        status: 200,
+        members: nicknames,
+        givenHost: socket.id === roomData.get(lobbyId).host,
+      });
+    } else {
+      callback({
+        status: 404,
+        lobby: "",
+        members: [],
+      });
+    }
   });
   socket.on("lobbyQuestionSend", (questionData) => {
     // Get current room user is in
@@ -88,15 +97,15 @@ io.on("connection", (socket) => {
     if (!roomQuestions.get(room).clients_answered.includes(socket.id)) {
       const roomData = roomQuestions.get(room);
       const { answers, clients_answered } = roomData;
-      roomQuestions.set({
+      roomQuestions.set(room, {
         ...roomData,
-        answers: answers.push(answer),
-        clients_answered: clients_answered.push(socket.id),
+        answers: [...answers, answer],
+        clients_answered: [...clients_answered, socket.id],
       });
     }
     io.to(room).emit("answer-count", roomQuestions.get(room).answers.length);
     callback({
-      status: "ok",
+      status: 200,
     });
   });
   socket.on("lobbyAnswerEnd", async () => {
@@ -104,9 +113,16 @@ io.on("connection", (socket) => {
     const sockets = await io.in(room).fetchSockets();
     const { targets, answers } = roomQuestions.get(room);
     sockets.map((client) => {
-      client.emit("lobbyAnswerEnd", targets.includes(client.data.nickname)? answers: []);
-    })
+      client.emit(
+        "lobbyAnswerEnd",
+        targets.includes(client.data.nickname) ? answers : []
+      );
+    });
   });
+  socket.on("send-message", (message) => {
+    const room = getSocketRoom(socket);
+    io.to(room).emit("new-message", {nickname: socket.data.nickname, text: message});
+  })
   socket.on("user-leave", () => {
     const room = getSocketRoom(socket);
     const nicknames = [];
