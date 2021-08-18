@@ -9,3 +9,11 @@ Clone the github repo and run
 '''
 npm run dev
 '''
+
+Host Prompt
+
+![image](https://user-images.githubusercontent.com/60726802/129944250-8c35b070-074d-4bb0-ad4f-5650d614cb71.png)
+
+What guests see 
+![image](https://user-images.githubusercontent.com/60726802/129944637-e80162ed-7367-48c9-b778-bc0e74302b72.png)
+
