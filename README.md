@@ -1,6 +1,6 @@
 # TallyMe
 
-Tally Me serves an area where teams can vote and communicate their ideas. Hosts can choose who can view the results of each poll, and whether or not the toll stays anonymous.
+Tally Me serves an area where teams can vote and communicate their ideas in real-time. Hosts can choose who can view the results of each poll, and whether or not the toll stays anonymous.
 Served through an Espress.js, Socket.IO, and React. 
 
 ![image](https://user-images.githubusercontent.com/60726802/129944250-8c35b070-074d-4bb0-ad4f-5650d614cb71.png)
@@ -25,7 +25,7 @@ Served through an Espress.js, Socket.IO, and React.
 
 # Host Controls
 
-When you create a room, a room code will be generating, or users can join via the link.
-For each question, you will be able to choose whether or not the vote will be anonymous, and who the results will be displayed to.
+When you create a room, a room code will be generated for users to join.
+For each question, you will be able to choose whether or not the vote will be anonymous, and who the results will be displayed to. After everyone has voted, you can hit the 'End Responses' button, which will end voting and display the results.
 
 
