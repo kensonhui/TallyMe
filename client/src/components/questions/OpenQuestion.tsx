@@ -79,7 +79,7 @@ const OpenQuestion = (props: Question) => {
           changeCheck={(e) => targetChangeAll(e.target.checked)}
         ></CheckBox>
       </div>
-      <div className="flex justify-center">
+      <div className="flex justify-center items-baseline">
         <p> Anonymous Vote:</p>
         <input
           type="checkbox"
@@ -87,13 +87,13 @@ const OpenQuestion = (props: Question) => {
           onChange={(e) => setAnonymous(e.target.checked)}
           className="w-8 h-5"
         />
-      </div>
       <button
         onClick={questionSendHandler}
         className="bg-green-600 text-center transition duration-150 ease-in-out hover:bg-green-500"
       >
         Submit
       </button>
+      </div>
     </div>
   );
 };

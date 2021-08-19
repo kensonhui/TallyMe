@@ -14,13 +14,8 @@ export default function Home(props: PropsType) {
   const history = useHistory();
   return (
     <div className="grid place-items-center">
-      <div className="flex flex-col m-8 bg-gray-700 p-4 rounded-md">
-        <h3 className="text-center text-3xl m-2">Tally Me</h3>
-        <img
-          src="/tolly.png"
-          alt="tolly the bee"
-          className="bg-white w-52 h-50 rounded-md"
-        />
+      <div className="flex flex-col m-8 bg-gray-800 p-10 rounded-md">
+        <h3 className="text-center text-3xl m-2 font-sans bold">Tally Me</h3>
         <p>Create a Lobby or Join One</p>
         <input
           onChange={(e) => {

@@ -13,10 +13,10 @@ import {
 const socket = openSocket('/');
 function App() {
   return (
-      <div className="bg-gray-600 min-h-screen text-gray-50">
+      <div className="bg-gray-900 min-h-screen text-gray-50">
         <Router>
-          <div className="bg-gray-700 flex">
-            <Link to="/" className="m-2">Home</Link>
+          <div className="bg-gray-900 flex items-baseline">
+            <Link to="/" className="m-2 text-2xl">TallyMe</Link>
             <Link to="/lobby" className="m-2">Lobby</Link>
             <Link to="/about" className="m-2">About</Link>
             <Link to="/feedback" className="m-2">Feedback</Link>

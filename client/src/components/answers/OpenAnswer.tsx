@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { lobbyAnswerSend } from "../../utils/api";
 import { Socket } from "socket.io-client";
 interface PropsType {
-  answerPrompt: { 
-    question: string; 
-    details: string; 
+  answerPrompt: {
+    question: string;
+    details: string;
     anonymous: boolean;
-    targets: string[]
+    targets: string[];
   };
   socket: Socket;
 }
@@ -41,7 +41,10 @@ export default function OpenAnswer(props: PropsType) {
         </span>
       </p>
       <div>
-        Your answer will be shown to: {props.answerPrompt.targets.map((target) => <p key={target}>{target}</p>)}
+        Your answer will be shown to:{" "}
+        {props.answerPrompt.targets.map((target) => (
+          <p key={target}>{target}</p>
+        ))}
       </div>
       <p>Answer</p>
       <textarea
@@ -53,7 +56,9 @@ export default function OpenAnswer(props: PropsType) {
         {" "}
         Submit
       </button>
-      {submitted ? "Answer sucessfully submitted" : "Waiting for response"}
+      <p className="font-bold">
+        {submitted ? "Answer sucessfully submitted" : "Waiting for response"}
+      </p>
     </div>
   );
 }
