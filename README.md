@@ -9,7 +9,9 @@ Served through an Espress.js, Socket.IO, and React.
 
 1. To run the application, clone the repo and install the packages for both the client and server by running
 
-       npm i cd ./client npm i
+       npm i 
+       cd ./client 
+       npm i
 
 2. Then to run the application
 
