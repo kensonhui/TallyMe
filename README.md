@@ -1,7 +1,7 @@
 # TallyMe
 
-Tally Me serves an area where teams can vote and communicate their ideas in real-time. Hosts can choose who can view the results of each poll, and whether or not the toll stays anonymous.
-Served through an Espress.js, Socket.IO, and React. 
+Tally Me serves an area where teams can vote and communicate their ideas in real-time. Hosts can choose who can view the results of each poll, and whether or not the poll stays anonymous.
+Created with Express.js, Socket.IO, and React. 
 
 ![image](https://user-images.githubusercontent.com/60726802/129944250-8c35b070-074d-4bb0-ad4f-5650d614cb71.png)
 
